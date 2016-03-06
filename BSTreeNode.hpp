@@ -1,9 +1,12 @@
+#ifndef BSTREENODE_CLASS_H
+#define BSTREENODE_CLASS_H
 
+#define null 0
 
 class BSTreeNode
 {
 	public:
-		BSTreeNode();
+		BSTreeNode(int value);
 		~BSTreeNode();
 
 		int getData(void);
@@ -14,9 +17,10 @@ class BSTreeNode
 		void setLeftChild(BSTreeNode* nodePtr);
 		void setRightChild(BSTreeNode* nodePtr);
 		
-
 	private:
 		int data;
 		BSTreeNode *leftChild;
 		BSTreeNode *rightChild;
 };
+
+#endif

@@ -1,8 +1,10 @@
-// Constructor
+#include "BSTreeNode.hpp"
 
-BSTreeNode::BSTreeNode()
+BSTreeNode::BSTreeNode(int value)
 {
-	
+	data = value;
+	leftChild = null;
+	rightChild = null;
 }
 
 void BSTreeNode::setData(int value)
@@ -15,12 +17,12 @@ int BSTreeNode::getData(void)
 	return data;
 }
 
-BSTreeNode* getLeftChild(void)
+BSTreeNode* BSTreeNode::getLeftChild(void)
 {
 	return leftChild;
 }
 
-BSTreeNode* getRightChild(void)
+BSTreeNode* BSTreeNode::getRightChild(void)
 {
 	return rightChild;
 }
