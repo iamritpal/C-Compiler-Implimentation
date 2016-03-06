@@ -7,6 +7,12 @@ BSTreeNode::BSTreeNode(int value)
 	rightChild = null;
 }
 
+BSTreeNode::~BSTreeNode()
+{
+	delete leftChild;
+	delete rightChild;
+}
+
 void BSTreeNode::setData(int value)
 {
 	data = value;

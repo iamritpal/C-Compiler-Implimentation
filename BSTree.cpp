@@ -45,7 +45,10 @@ void BSTree::insert(int element)
 					return;
 				}
 			}
-			else { return;}			// element exists so do nothing, garbage collector will take care of created newNode
+			else { 		// element exists so do nothing and delete the newNode created
+				delete newNode;
+				return;
+			}
 		}
 	}
 }
