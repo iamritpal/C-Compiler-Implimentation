@@ -10,6 +10,11 @@ BSTree::BSTree()
 	root = null;
 }
 
+BSTree::~BSTree()
+{
+	delete root;
+}
+
 /*
  *	insert() : Insert a new element into BSTree
  *	Create a new node with data as the new element

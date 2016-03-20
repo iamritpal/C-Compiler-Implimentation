@@ -42,3 +42,5 @@ void BSTreeNode::setRightChild(BSTreeNode* nodePtr)
 {
 	rightChild = nodePtr;
 }
+
+
