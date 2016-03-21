@@ -1,4 +1,4 @@
-# C-Compiler-Implimentation
+# Simple-Compiler-Implimentation
 
 Use the below command to compile the software:
 
