@@ -2,4 +2,4 @@
 
 Use the below command to compile the software:
 
-g++ -o main main.cpp BSTree.cpp BSTreeNode.cpp
+g++ -o main main.cpp BSTree.cpp BSTreeNode.cpp Stack.cpp
