@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+using namespace std;
 
 class Stack
 {
@@ -10,7 +11,8 @@ class Stack
 		Stack(int max);
 		~Stack();
 		void push(int element);
-		int pop(int *ptr);
+		int pop(void);
+		int isEmpty(void);
 
 	private:
 		int nmbItems;

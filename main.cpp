@@ -1,10 +1,15 @@
 #include <iostream>
 #include <string>
 #include "BSTree.hpp"
+#include "Stack.hpp"
+
 using namespace std;
+
+int charToInt(char ch);
 
 // Test functions
 void BinarySearchTreeTest(int nmbItems);
+void StackTest(int nmbItems);
 
 void PrintMainMenu(void);
 int getUserMenuSelection(void);
@@ -45,6 +50,15 @@ int main(int argc, char *argv[])
 					break;
 
 				case 2:
+					cout << "Enter value [1,100] for number random integers ";
+					cout << "to insert in Stack: " << endl;
+
+					SubSelect = getUserMenuSelection();
+					if (isValidSelection(1,100,SubSelect))
+						StackTest(SubSelect);
+					else
+						cout << "Invalid input entered!" << endl;
+
 					break;
 
 				case 3:
@@ -124,6 +138,45 @@ void BinarySearchTreeTest(int nmbItems)
 		cout << "Could not find " << value;
 	cout << endl;
 	BinarySearchTree->~BSTree();
+}
+
+//*********************************************
+//	StackTest()
+//	Q3 - Write a program to read in a random sequence 
+//  of letters A, B, C, D, etc... as user input and store
+//  the input sequence into a stack. As the second user input
+//  of an integer, write the code to pop 
+//  off the number of symbols specified by the input 
+//  integer from the stack.
+//	(perform demo in your presentation)
+//*********************************************
+
+void StackTest(int nmbItems)
+{
+	int i=0;
+	int value;
+
+	Stack *vStack = new Stack(nmbItems);
+
+	while (i < nmbItems)
+	{
+		value = rand()%10;		// Random integer value
+		cout << value;
+		if (i < (nmbItems-1))
+			cout << ", ";
+		vStack->push(value);
+		i++;
+	}
+
+	cout << endl;
+	cout << "Pop off values from stack" << endl;
+
+	while (!vStack->isEmpty())
+	{
+		cout << vStack->pop() << ", ";
+	}
+
+	vStack->~Stack();
 }
 
 

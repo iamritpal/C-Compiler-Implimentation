@@ -11,6 +11,9 @@ Stack::Stack(int max)
 	StackVector.resize(max);
 }
 
+Stack::~Stack()
+{}
+
 /*
 	push() routine
 	Pushes new value onto stack vector.
@@ -33,15 +36,18 @@ void Stack::push(int value)
 			0: When stack underflow occurs, e.g. trying to pop empty stack
 */
 
-int Stack::pop(int *ptr)
+int Stack::pop(void)
 {
 	if (nmbItems > 0)	// Stack is not empty
 	{
 		nmbItems--;
-		*ptr = StackVector[nmbItems];
-		return 1;
+		return StackVector[nmbItems];
 	}
 	cout << "Stack underflow!" << endl;
 	return 0;
 }
 
+int Stack::isEmpty(void)
+{
+	return(nmbItems == 0);
+}
