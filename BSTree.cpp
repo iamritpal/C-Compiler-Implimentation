@@ -81,3 +81,54 @@ bool BSTree::find(int element)
 	return true;
 }
 
+void BSTree::inOrder(BSTreeNode* tree)
+{
+	if (tree != null)
+	{
+		inOrder(tree->getLeftChild());
+		cout << tree->getData() << ", ";
+		inOrder(tree->getRightChild());
+	}
+}
+
+void BSTree::preOrder(BSTreeNode* tree)
+{
+	if (tree != null)
+	{
+		cout << tree->getData() << ", ";
+		preOrder(tree->getLeftChild());
+		preOrder(tree->getRightChild());
+	}
+}
+
+void BSTree::postOrder(BSTreeNode* tree)
+{
+	if (tree != null)
+	{
+		postOrder(tree->getLeftChild());
+		postOrder(tree->getRightChild());	
+		cout << tree->getData() << ", ";
+	}
+}
+
+void BSTree::BSTreeTraverse(int orderType)
+{
+	switch(orderType)
+	{
+		case PREORDER:
+			BSTree::preOrder(root);
+			break;
+
+		case INORDER:
+			BSTree::inOrder(root);
+			break;
+
+		case POSTORDER:
+			BSTree::postOrder(root);
+			break;
+
+		default:
+			break;
+	}
+}
+

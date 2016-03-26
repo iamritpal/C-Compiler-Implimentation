@@ -129,7 +129,17 @@ void BinarySearchTreeTest(int nmbItems)
 	cout << endl;
 	cout << "Entered " << nmbItems << " random values into BSTree Data Structure ..." << endl;
 
-	cout << "Search for a value: ";
+	cout << endl << "Preorder Traversal: ";
+	BinarySearchTree->BSTreeTraverse(PREORDER);
+
+	cout << endl << "Inorder Traversal: ";
+	BinarySearchTree->BSTreeTraverse(INORDER);
+
+	cout << endl << "Post order Traversal: ";
+	BinarySearchTree->BSTreeTraverse(POSTORDER);
+
+	cout << endl;
+	cout << "Search for a value in the tree: ";
 	cin >> value;
 
 	if (BinarySearchTree->find(value))
