@@ -2,6 +2,7 @@
 #include <string>
 #include "BSTree.hpp"
 #include "Stack.hpp"
+#include <stdlib.h>
 
 using namespace std;
 
