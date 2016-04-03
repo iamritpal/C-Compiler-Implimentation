@@ -16,18 +16,25 @@ void PrintMainMenu(void);
 int getUserMenuSelection(void);
 int isValidSelection(int min, int max, int selection);
 
-#define NmbMenuOptions 3
+#define NmbMenuOptions 4
 string menu[NmbMenuOptions] =
 {
 	"1. Test BinarySearchTree Data Structure Implementation.",
 	"2. Test Stack Data Structure Implementation.",
-	"3. Quit"
+	"3. Perform bottom up parsing.",
+	"4. Quit"
 };
+
+// Bottom up parsing
+#define NmbOfStatements 5
+#define HandleMaxSize 100
+char HandleSequence[NmbOfStatements][HandleMaxSize];	// Define hadle sequence
 
 int main(int argc, char *argv[])
 {
 	int MainSelect;		// Main menu selection
 	int SubSelect;		// Sub menu selection
+	char chBuff[50];	// Character selection buffer e.g. allows inputs of a, b etc
 
 	for(;;)
 	{
@@ -63,6 +70,26 @@ int main(int argc, char *argv[])
 					break;
 
 				case 3:
+					cout << "Give the following grammar:" << endl;
+					cout << "\tA -> id = E" << endl;
+					cout << "\tE -> E +T " << endl;
+					cout << "\tE -> E-T │T" << endl;
+					cout << "\tT -> T*F │ T/F │ F" << endl;
+					cout << "\tF -> (E) │id" << endl;
+					cout << "\tid -> a│b│c.....|x|y|z" << endl;
+					cout << "Perform bottom up parsing on the following statements:" << endl;
+					cout << " a. a=b+c-d" << endl;
+					cout << " b. a=b*c+d*e" << endl;
+					cout << " c. a=b*c*d" << endl;
+					cout << " d. a=a/b-c*d" << endl;
+					cout << " e. a=b*c+d*e" << endl;
+					cout << "Enter value: ";
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); 	// flush cin input stream
+					cin.getline(chBuff,50); 
+					cout << chBuff[0];
+					break;
+
+				case 4:
 					exit(0);	// Exit program with a success code.
 					break;
 			}
@@ -72,6 +99,7 @@ int main(int argc, char *argv[])
 		{
 			cout << "You have entered invalid input!" << endl;
 		}
+		cin.clear();
 	}
 
 	//cin >> ans;
