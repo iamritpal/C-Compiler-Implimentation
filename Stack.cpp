@@ -47,6 +47,15 @@ int Stack::pop(void)
 	return 0;
 }
 
+int Stack::top(void)
+{
+	if (nmbItems > 0)	// Stack is not empty
+	{
+		return StackVector[nmbItems-1];
+	}
+	return 0;
+}
+
 int Stack::isEmpty(void)
 {
 	return(nmbItems == 0);

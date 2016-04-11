@@ -13,6 +13,7 @@ class Stack
 		void push(int element);
 		int pop(void);
 		int isEmpty(void);
+		int top(void);
 
 	private:
 		int nmbItems;

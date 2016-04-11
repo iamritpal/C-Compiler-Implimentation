@@ -30,6 +30,9 @@ string menu[NmbMenuOptions] =
 #define HandleMaxSize 100
 char HandleSequence[NmbOfStatements][HandleMaxSize];	// Define hadle sequence
 
+void bottom_up_parsing(void);
+int grammar_rules(int var);
+
 int main(int argc, char *argv[])
 {
 	int MainSelect;		// Main menu selection
@@ -38,6 +41,7 @@ int main(int argc, char *argv[])
 
 	for(;;)
 	{
+		bottom_up_parsing();		// testing purpose
 		PrintMainMenu();
 
 		MainSelect = getUserMenuSelection();
@@ -246,3 +250,161 @@ int isValidSelection(int min, int max, int selection)
 		return(1);
 	return(0);
 }
+
+#define IDENTIFIER '#'
+#define STARTSYMBOL 'A'
+
+#define ACCEPT 1
+#define REJECT 2
+
+//char inp_str[50] = "a=b*c+d*e$";
+//char inp_str[50] = "a=b$";
+//char inp_str[50] = "a=a+b$";
+//char inp_str[50] = "a=b+c-d$";
+//char inp_str[50] = "a=b*c*d$";
+//char inp_str[50] = "a=a/b-c*d$";
+char inp_str[50] = "a=b+c-d-f$";
+int istr_ptr;
+int hseq_ptr;
+int ch = 0;
+
+Stack *v1Stack = new Stack(50);
+
+void bottom_up_parsing(void)
+{
+	//char inp_str[50] = "a=b+c+d$";
+
+	char handle_seq[100] = 
+	{
+		//"ab#Fc#T*FTd#Fe#T*FE+T"	// a=b*c+d*e
+		//"ab#FTc#FE+Td#FE-T#=E" 	// a=b+c-d
+		//"ab#FT#=E"		// a=b handle seq
+		//"aa#FTb#FE+TE"		// a=a+b handle seq
+		//"ab#Fc#FT*Fd#T*F#=E"		// a=b*c*d
+		//"aa#Fb#T/FTc#Fd#T*FE-T#=E" // a=a/b-c*d
+		"ab#FTc#FE+Td#FE-Tf#FE-T#=E"	 // a=a/b-c*d
+	};
+
+	v1Stack->push('$');
+
+	istr_ptr = 0;
+	hseq_ptr = 0;
+
+	int i = 0;
+
+	while (((v1Stack->top() != STARTSYMBOL) || (inp_str[istr_ptr] != '$')) && (i <= 30))
+	{
+		
+
+		if ((v1Stack->top() != handle_seq[hseq_ptr]) && 
+			(inp_str[istr_ptr] != '$') &&
+			(handle_seq[hseq_ptr+1] != '+') &&
+			(handle_seq[hseq_ptr+1] != '-') &&
+			(handle_seq[hseq_ptr+1] != '/') &&
+			(handle_seq[hseq_ptr+1] != '*'))		// Shift
+		{
+			cout << "stack_top = " << (char)v1Stack->top() << " != handle_seq = " << handle_seq[hseq_ptr] << endl;
+
+			cout << "push " << (char)inp_str[istr_ptr] << endl;
+			v1Stack->push((int)inp_str[istr_ptr++]);
+		}
+		else					// Reduce
+		{
+			cout << "stack_top = " << (char)v1Stack->top() << " == handle_seq = " << handle_seq[hseq_ptr] << endl;
+
+
+			ch = v1Stack->pop();
+			cout << "pop " << (char) ch << endl;
+			/*
+			if ((pop_ch == 'E') && (inp_str[istr_ptr] == '$'))
+			{
+				while (!vStack->isEmpty())
+				{
+					pop_ch = vStack->pop();
+				}
+				vStack->push('A');
+				state = ACCEPT;
+			}
+			else
+			*/		
+			ch = grammar_rules(ch);
+			cout << "push " << (char) ch << endl;
+			v1Stack->push(ch);
+			hseq_ptr++;
+
+		}
+		//cout << (char)v1Stack->top() << endl;
+		i++;
+	}
+	
+}
+
+int grammar_rules(int var)
+{
+	int ch = 0;
+
+	if (var == IDENTIFIER)
+		ch = 'F';
+	else if ((var >= 97) && (var <= 122))
+		ch = IDENTIFIER;
+	else if (var == 'F')
+	{
+		if ((v1Stack->top() == '*') || (v1Stack->top() == '/'))
+		{
+			v1Stack->pop();
+			hseq_ptr++;
+			if (v1Stack->top() == 'T')
+			{
+				v1Stack->pop();
+				hseq_ptr++;
+				ch = 'T';
+			}
+		}
+		else
+		{
+			ch = 'T';
+		}
+	}
+	else if (var == 'T')
+	{
+		cout << endl << (char)v1Stack->top() << endl;
+		cout << "debug1" << endl;
+
+		if ((v1Stack->top() == '+') || (v1Stack->top() == '-'))
+		{
+			v1Stack->pop();
+			hseq_ptr++;
+			if (v1Stack->top() == 'E')
+			{
+				v1Stack->pop();
+				hseq_ptr++;
+				ch = 'E';
+			}
+		}
+		else
+		{
+			ch = 'E';
+		}
+	}
+	else if (var == 'E')
+	{
+		if ((v1Stack->top() == '=') && (inp_str[istr_ptr] == '$'))
+		{
+			v1Stack->pop();
+			if (v1Stack->top() == IDENTIFIER)
+			{
+				v1Stack->pop();
+				ch = 'A';
+				cout << "valid string" << endl;
+			}
+		}
+	}
+	return ch;
+}
+
+
+
+
+
+
+
