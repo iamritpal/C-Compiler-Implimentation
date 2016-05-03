@@ -30,7 +30,7 @@ string menu[NmbMenuOptions] =
 #define HandleMaxSize 100
 char HandleSequence[NmbOfStatements][HandleMaxSize];	// Define hadle sequence
 
-void bottom_up_parsing(void);
+void shift_reduce_parsing(int var);
 int grammar_rules(int var);
 
 int main(int argc, char *argv[])
@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
 
 	for(;;)
 	{
-		bottom_up_parsing();		// testing purpose
 		PrintMainMenu();
 
 		MainSelect = getUserMenuSelection();
@@ -82,15 +81,16 @@ int main(int argc, char *argv[])
 					cout << "\tF -> (E) │id" << endl;
 					cout << "\tid -> a│b│c.....|x|y|z" << endl;
 					cout << "Perform bottom up parsing on the following statements:" << endl;
-					cout << " a. a=b+c-d" << endl;
-					cout << " b. a=b*c+d*e" << endl;
-					cout << " c. a=b*c*d" << endl;
-					cout << " d. a=a/b-c*d" << endl;
-					cout << " e. a=b*c+d*e" << endl;
+					cout << " 1. a=b*c+d*e" << endl;
+					cout << " 2. a=b" << endl;
+					cout << " 3. a=a+b" << endl;
+					cout << " 4. a=b+c-d" << endl;
+					cout << " 5. a=b*c*d" << endl;
+					cout << " 6. a=a/b-c*d" << endl;
+					cout << " 7. a=b+c-d-f" << endl;
 					cout << "Enter value: ";
-					cin.ignore(numeric_limits<streamsize>::max(), '\n'); 	// flush cin input stream
-					cin.getline(chBuff,50); 
-					cout << chBuff[0];
+					SubSelect = getUserMenuSelection(); 
+					shift_reduce_parsing(SubSelect);		// testing purpose
 					break;
 
 				case 4:
@@ -257,6 +257,33 @@ int isValidSelection(int min, int max, int selection)
 #define ACCEPT 1
 #define REJECT 2
 
+char inp_strings_data[7][50] =
+{
+	"a=b*c+d*e$              ",
+	"a=b$                    ",
+	"a=a+b$                  ",
+	"a=b+c-d$                ",
+	"a=b*c*d$                ",
+	"a=a/b-c*d$              ",
+	"a=b+c-d-f$              "
+};
+
+char handle_seq_data[7][100] = 
+	{
+		"ab#Fc#T*FTd#Fe#T*FE+T        ",		// a=b*c+d*e
+		"ab#FT#=E                     ",		// a=b
+		"aa#FTb#FE+TE                 ",		// a=a+b
+		"ab#FTc#FE+Td#FE-T#=E         ", 		// a=b+c-d
+		"ab#Fc#FT*Fd#T*F#=E           ",		// a=b*c*d
+		"aa#Fb#T/FTc#Fd#T*FE-T#=E     ", 		// a=a/b-c*d
+		"ab#FTc#FE+Td#FE-Tf#FE-T#=E   "			// a=b+c-d-f$
+	};
+
+int in_str_size[7] = 
+{
+	10,4,6,8,8,10,10
+};
+
 //char inp_str[50] = "a=b*c+d*e$";
 //char inp_str[50] = "a=b$";
 //char inp_str[50] = "a=a+b$";
@@ -270,20 +297,11 @@ int ch = 0;
 
 Stack *v1Stack = new Stack(50);
 
-void bottom_up_parsing(void)
+void shift_reduce_parsing(int var)
 {
 	//char inp_str[50] = "a=b+c+d$";
 
-	char handle_seq[100] = 
-	{
-		//"ab#Fc#T*FTd#Fe#T*FE+T"	// a=b*c+d*e
-		//"ab#FTc#FE+Td#FE-T#=E" 	// a=b+c-d
-		//"ab#FT#=E"		// a=b handle seq
-		//"aa#FTb#FE+TE"		// a=a+b handle seq
-		//"ab#Fc#FT*Fd#T*F#=E"		// a=b*c*d
-		//"aa#Fb#T/FTc#Fd#T*FE-T#=E" // a=a/b-c*d
-		"ab#FTc#FE+Td#FE-Tf#FE-T#=E"	 // a=a/b-c*d
-	};
+	char handle_seq[100];
 
 	v1Stack->push('$');
 
@@ -292,10 +310,14 @@ void bottom_up_parsing(void)
 
 	int i = 0;
 
+	for (int e=0;e<50;e++)
+		inp_str[e] = inp_strings_data[var-1][e];
+
+	for (int e=0;e<100;e++)
+		handle_seq[e] = handle_seq_data[var-1][e];
+
 	while (((v1Stack->top() != STARTSYMBOL) || (inp_str[istr_ptr] != '$')) && (i <= 30))
 	{
-		
-
 		if ((v1Stack->top() != handle_seq[hseq_ptr]) && 
 			(inp_str[istr_ptr] != '$') &&
 			(handle_seq[hseq_ptr+1] != '+') &&
@@ -303,18 +325,18 @@ void bottom_up_parsing(void)
 			(handle_seq[hseq_ptr+1] != '/') &&
 			(handle_seq[hseq_ptr+1] != '*'))		// Shift
 		{
-			cout << "stack_top = " << (char)v1Stack->top() << " != handle_seq = " << handle_seq[hseq_ptr] << endl;
+			//cout << "stack_top = " << (char)v1Stack->top() << " != handle_seq = " << handle_seq[hseq_ptr] << endl;
 
-			cout << "push " << (char)inp_str[istr_ptr] << endl;
+			//cout << "push " << (char)inp_str[istr_ptr] << endl;
 			v1Stack->push((int)inp_str[istr_ptr++]);
 		}
 		else					// Reduce
 		{
-			cout << "stack_top = " << (char)v1Stack->top() << " == handle_seq = " << handle_seq[hseq_ptr] << endl;
+			//cout << "stack_top = " << (char)v1Stack->top() << " == handle_seq = " << handle_seq[hseq_ptr] << endl;
 
 
 			ch = v1Stack->pop();
-			cout << "pop " << (char) ch << endl;
+			//cout << "pop " << (char) ch << endl;
 			/*
 			if ((pop_ch == 'E') && (inp_str[istr_ptr] == '$'))
 			{
@@ -328,12 +350,21 @@ void bottom_up_parsing(void)
 			else
 			*/		
 			ch = grammar_rules(ch);
-			cout << "push " << (char) ch << endl;
+			//cout << "push " << (char) ch << endl;
 			v1Stack->push(ch);
 			hseq_ptr++;
 
 		}
-		//cout << (char)v1Stack->top() << endl;
+		if (v1Stack->top() == STARTSYMBOL)
+		{
+			cout << "Successfully parsed string ";
+			for (int e=0;e<50;e++)
+			{
+				cout << inp_str[e];
+			}
+			cout << endl;
+		}
+
 		i++;
 	}
 	
@@ -367,8 +398,8 @@ int grammar_rules(int var)
 	}
 	else if (var == 'T')
 	{
-		cout << endl << (char)v1Stack->top() << endl;
-		cout << "debug1" << endl;
+		//cout << endl << (char)v1Stack->top() << endl;
+		//cout << "debug1" << endl;
 
 		if ((v1Stack->top() == '+') || (v1Stack->top() == '-'))
 		{
@@ -395,7 +426,7 @@ int grammar_rules(int var)
 			{
 				v1Stack->pop();
 				ch = 'A';
-				cout << "valid string" << endl;
+				//cout << "valid string" << endl;
 			}
 		}
 	}
